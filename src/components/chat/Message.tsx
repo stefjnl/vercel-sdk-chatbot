@@ -10,6 +10,7 @@ import { useTheme } from 'next-themes';
 import type { Message as MessageType } from '@/types/chat';
 import { cn, copyToClipboard, formatTimestamp } from '@/lib/utils/helpers';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   Tooltip,
@@ -86,21 +87,23 @@ export const Message = memo(({ message, isStreaming = false }: MessageProps) => 
   return (
     <div
       className={cn(
-        'group flex gap-3 px-4 py-6',
+        'group flex gap-4 px-4 md:px-6 py-6 hover:bg-accent/50 transition-colors',
         isUser ? 'bg-transparent' : 'bg-muted/30'
       )}
     >
       {/* Avatar */}
-      <div
-        className={cn(
-          'flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full',
-          isUser
-            ? 'bg-primary text-primary-foreground'
-            : 'bg-secondary text-secondary-foreground'
-        )}
-      >
-        {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-      </div>
+      <Avatar className="h-10 w-10 shrink-0">
+        <AvatarFallback
+          className={cn(
+            'font-medium',
+            isUser
+              ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white'
+              : 'bg-gradient-to-br from-green-600 to-emerald-600 text-white'
+          )}
+        >
+          {isUser ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
+        </AvatarFallback>
+      </Avatar>
 
       {/* Content */}
       <div className="flex-1 space-y-2 overflow-hidden">

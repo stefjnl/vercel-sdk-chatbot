@@ -57,10 +57,10 @@ export function MessageInput({
   return (
     <form
       onSubmit={onSubmit}
-      className="border-t bg-background p-4"
+      className="border-t bg-background/95 backdrop-blur-sm p-4 md:p-6"
     >
       <div className="max-w-4xl mx-auto">
-        <div className="relative flex items-end gap-2">
+        <div className="relative flex items-end gap-3">
           <div className="flex-1 relative">
             <Textarea
               ref={textareaRef}
@@ -70,15 +70,16 @@ export function MessageInput({
               placeholder="Type your message... (Shift+Enter for new line)"
               disabled={isLoading}
               className={cn(
-                'min-h-[60px] max-h-[200px] resize-none pr-12',
-                'focus-visible:ring-1'
+                'min-h-[60px] max-h-[200px] resize-none pr-12 border-2',
+                'focus-visible:ring-2 focus-visible:ring-primary/20',
+                'rounded-2xl shadow-sm'
               )}
               rows={1}
             />
             {characterCount > 0 && (
               <div
                 className={cn(
-                  'absolute bottom-2 right-2 text-xs',
+                  'absolute bottom-3 right-3 text-xs font-medium',
                   characterCount > maxCharacters
                     ? 'text-destructive'
                     : 'text-muted-foreground'
@@ -96,8 +97,9 @@ export function MessageInput({
               variant="destructive"
               onClick={onStop}
               aria-label="Stop generation"
+              className="h-11 w-11 rounded-xl shadow-md"
             >
-              <Square className="h-4 w-4" />
+              <Square className="h-5 w-5" />
             </Button>
           ) : (
             <Button
@@ -105,8 +107,9 @@ export function MessageInput({
               size="icon"
               disabled={!input.trim() || isLoading || characterCount > maxCharacters}
               aria-label="Send message"
+              className="h-11 w-11 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 shadow-md"
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-5 w-5" />
             </Button>
           )}
         </div>

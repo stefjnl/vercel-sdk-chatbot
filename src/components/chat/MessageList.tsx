@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Message } from './Message';
+import { Card } from '@/components/ui/card';
+import { Sparkles, Code, Lightbulb, MessageCircle } from 'lucide-react';
 import type { Message as MessageType } from '@/types/chat';
 
 interface MessageListProps {
@@ -22,28 +24,46 @@ export function MessageList({ messages, isStreaming = false }: MessageListProps)
 
   if (messages.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">Welcome to AI Chatbot</h2>
-        <p className="text-muted-foreground mb-8 max-w-md">
-          Start a conversation by typing your message below.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl w-full">
-          <ExamplePrompt
-            title="Explain a concept"
-            prompt="Explain quantum computing in simple terms"
-          />
-          <ExamplePrompt
-            title="Write code"
-            prompt="Write a Python function to calculate fibonacci numbers"
-          />
-          <ExamplePrompt
-            title="Creative writing"
-            prompt="Write a short story about a time traveler"
-          />
-          <ExamplePrompt
-            title="Problem solving"
-            prompt="How can I improve my productivity?"
-          />
+      <div className="flex flex-col items-center justify-center h-full px-4 py-8">
+        <div className="max-w-3xl w-full space-y-8 animate-in fade-in duration-700">
+          <div className="text-center space-y-4">
+            <div className="flex justify-center mb-4">
+              <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-3 rounded-2xl">
+                <Sparkles className="h-8 w-8 text-white" />
+              </div>
+            </div>
+            <h2 className="text-3xl font-bold">Start a Conversation</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Choose an example below or type your own message to begin
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ExamplePrompt
+              icon={<Lightbulb className="h-5 w-5" />}
+              title="Explain a concept"
+              prompt="Explain quantum computing in simple terms"
+              gradient="from-blue-500 to-cyan-500"
+            />
+            <ExamplePrompt
+              icon={<Code className="h-5 w-5" />}
+              title="Write code"
+              prompt="Write a Python function to calculate fibonacci numbers"
+              gradient="from-purple-500 to-pink-500"
+            />
+            <ExamplePrompt
+              icon={<Sparkles className="h-5 w-5" />}
+              title="Creative writing"
+              prompt="Write a short story about a time traveler"
+              gradient="from-orange-500 to-red-500"
+            />
+            <ExamplePrompt
+              icon={<MessageCircle className="h-5 w-5" />}
+              title="Problem solving"
+              prompt="How can I improve my productivity?"
+              gradient="from-green-500 to-emerald-500"
+            />
+          </div>
         </div>
       </div>
     );
@@ -66,10 +86,20 @@ export function MessageList({ messages, isStreaming = false }: MessageListProps)
 /**
  * Example prompt card component
  */
-function ExamplePrompt({ title, prompt }: { title: string; prompt: string }) {
+function ExamplePrompt({ 
+  icon, 
+  title, 
+  prompt, 
+  gradient 
+}: { 
+  icon: React.ReactNode;
+  title: string; 
+  prompt: string;
+  gradient: string;
+}) {
   return (
-    <button
-      className="p-4 text-left rounded-lg border border-border hover:border-primary hover:bg-accent transition-colors"
+    <Card
+      className="p-5 text-left cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] border-2 hover:border-primary/50 group"
       onClick={() => {
         const input = document.querySelector('textarea');
         if (input) {
@@ -78,8 +108,15 @@ function ExamplePrompt({ title, prompt }: { title: string; prompt: string }) {
         }
       }}
     >
-      <h3 className="font-medium mb-1">{title}</h3>
-      <p className="text-sm text-muted-foreground">{prompt}</p>
-    </button>
+      <div className="space-y-3">
+        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center text-white`}>
+          {icon}
+        </div>
+        <div>
+          <h3 className="font-semibold mb-1.5 group-hover:text-primary transition-colors">{title}</h3>
+          <p className="text-sm text-muted-foreground line-clamp-2">{prompt}</p>
+        </div>
+      </div>
+    </Card>
   );
 }
