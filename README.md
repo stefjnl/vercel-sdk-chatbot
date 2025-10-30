@@ -1,6 +1,6 @@
-# AI Chatbot - Production Ready
+# AI Chatbot - using Vercel AI SDK
 
-A fully functional, production-ready AI chatbot application built with **Next.js 14**, **TypeScript**, **Vercel AI SDK**, and **NanoGPT API**. Features real-time streaming responses, conversation management, markdown rendering with syntax highlighting, and a polished UI matching Claude/Gemini quality standards.
+An AI chatbot application built with **Next.js 14**, **TypeScript**, **Vercel AI SDK**, and **NanoGPT API**. Features real-time streaming responses, conversation management, markdown rendering with syntax highlighting, and a polished UI matching Claude/Gemini quality standards.
 
 ![AI Chatbot](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
