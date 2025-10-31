@@ -30,7 +30,7 @@ export interface ModelSelectorProps {
    */
   className?: string;
   /**
-   * Whether to show model descriptions on hover
+   * Whether to show model descriptions in the dropdown menu
    */
   showDescription?: boolean;
   /**
