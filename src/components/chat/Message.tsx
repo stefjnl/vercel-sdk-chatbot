@@ -25,6 +25,17 @@ interface MessageProps {
 }
 
 /**
+ * Props for the code component in ReactMarkdown
+ * Based on react-markdown's Code component signature
+ */
+interface CodeComponentProps {
+  className?: string;
+  children?: React.ReactNode;
+  inline?: boolean;
+  [key: string]: unknown;
+}
+
+/**
  * Code block component with syntax highlighting and copy functionality
  */
 const CodeBlock = memo(({ language, code, theme }: { language: string; code: string; theme: string }) => {
@@ -140,8 +151,7 @@ export const Message = memo(({ message, isStreaming = false }: MessageProps) => 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                code({ className, children, ...props }: any) {
+                code({ className, children, ...props }: CodeComponentProps) {
                   const match = /language-(\w+)/.exec(className || '');
                   const codeString = String(children).replace(/\n$/, '');
                   const isInline = !match && !className?.includes('language-');
@@ -158,7 +168,7 @@ export const Message = memo(({ message, isStreaming = false }: MessageProps) => 
                         'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm',
                         className
                       )}
-                      {...props}
+                      {...(props as React.HTMLAttributes<HTMLElement>)}
                     >
                       {children}
                     </code>
