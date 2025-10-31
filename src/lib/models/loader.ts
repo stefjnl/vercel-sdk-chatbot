@@ -73,11 +73,14 @@ export async function loadModels(): Promise<{
       // If validation fails, return the models anyway with a warning
       // This handles cases where the JSON structure is valid but our validation is too strict
       if (Array.isArray(data.models) && data.models.length > 0) {
-        console.warn('Returning models from JSON despite validation failure');
-        return { 
-          models: data.models,
-          error: 'Models validation warning',
-        };
+        const filteredModels = data.models.filter(isValidModelConfig);
+        if (filteredModels.length > 0) {
+          console.warn('Returning only valid models from JSON despite overall validation failure');
+          return { 
+            models: filteredModels,
+            error: 'Models validation warning: some models were filtered out',
+          };
+        }
       }
       return {
         models: FALLBACK_MODELS,
