@@ -28,13 +28,15 @@ function mapToAISDKMessages(messages: Message[]) {
  */
 function mapFromAISDKMessages(messages: Array<{
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: string;
   content: string;
   reasoning?: string;
   createdAt?: Date | string;
 }>): Message[] {
   return messages
-    .filter(m => m.role === 'user' || m.role === 'assistant' || m.role === 'system')
+    .filter((m): m is typeof m & { role: 'user' | 'assistant' | 'system' } => 
+      m.role === 'user' || m.role === 'assistant' || m.role === 'system'
+    )
     .map(m => ({
       id: m.id,
       role: m.role,

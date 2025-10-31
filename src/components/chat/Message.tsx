@@ -28,11 +28,10 @@ interface MessageProps {
  * Props for the code component in ReactMarkdown
  * Based on react-markdown's Code component signature
  */
-interface CodeComponentProps {
+interface CodeComponentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   children?: React.ReactNode;
   inline?: boolean;
-  [key: string]: unknown;
 }
 
 /**
@@ -151,7 +150,7 @@ export const Message = memo(({ message, isStreaming = false }: MessageProps) => 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                code({ className, children, ...props }: CodeComponentProps) {
+                code: ({ className, children, ...props }: CodeComponentProps) => {
                   const match = /language-(\w+)/.exec(className || '');
                   const codeString = String(children).replace(/\n$/, '');
                   const isInline = !match && !className?.includes('language-');

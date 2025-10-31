@@ -7,6 +7,10 @@ const nextConfig = {
   },
   // Enable standalone output for Docker
   // output: 'standalone',
+  webpack: (config) => {
+    config.cache = false;
+    return config;
+  }
 };
 
 export default nextConfig;
