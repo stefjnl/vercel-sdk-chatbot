@@ -4,24 +4,29 @@ import React, { useRef, useEffect, KeyboardEvent } from 'react';
 import { Send, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { ModelSelector } from './ModelSelector';
 import { cn } from '@/lib/utils/helpers';
 
 interface MessageInputProps {
   input: string;
   isLoading: boolean;
+  selectedModelId: string;
   onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onModelChange: (modelId: string) => void;
   onStop?: () => void;
 }
 
 /**
- * Message input with auto-resize and keyboard shortcuts
+ * Message input with auto-resize, keyboard shortcuts, and model selector
  */
 export function MessageInput({
   input,
   isLoading,
+  selectedModelId,
   onInputChange,
   onSubmit,
+  onModelChange,
   onStop,
 }: MessageInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -59,7 +64,21 @@ export function MessageInput({
       onSubmit={onSubmit}
       className="border-t bg-background/95 backdrop-blur-sm p-4 md:p-6"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto space-y-3">
+        {/* Model Selector */}
+        <div className="flex items-center gap-2 px-1">
+          <span className="text-sm font-medium text-muted-foreground hidden sm:inline">
+            Model:
+          </span>
+          <ModelSelector
+            selectedModelId={selectedModelId}
+            onModelChange={onModelChange}
+            showDescription={false}
+            disabled={isLoading}
+          />
+        </div>
+
+        {/* Message Input */}
         <div className="relative flex items-end gap-3">
           <div className="flex-1 relative">
             <Textarea

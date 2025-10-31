@@ -1,0 +1,40 @@
+import type { ModelConfig } from '@/types/chat';
+
+/**
+ * Default fallback models in case JSON loading fails
+ * Used for validation on both client and server
+ */
+export const FALLBACK_MODELS: ModelConfig[] = [
+  {
+    id: 'openai/gpt-oss-120b',
+    name: 'GPT-OSS 120B',
+    description: 'High-performance open-source model with 120 billion parameters',
+    capabilities: ['reasoning', 'code', 'general-knowledge'],
+    maxTokens: 8000,
+    default: true,
+  },
+  {
+    id: 'MiniMax-M2',
+    name: 'MiniMax-M2',
+    description: 'MiniMax M2 offers enhanced reasoning and strong general performance. Optimized for coding and agentic workflows.',
+    capabilities: ['reasoning', 'code', 'analysis', 'general-knowledge'],
+    maxTokens: 8000,
+    default: false,
+  },
+  {
+    id: 'z-ai/glm-4.6',
+    name: 'GLM 4.6',
+    description: 'Latest GLM series chat model with strong general performance. Quantized at FP8',
+    capabilities: ['code', 'general-knowledge'],
+    maxTokens: 8000,
+    default: false,
+  },
+  {
+    id: 'moonshotai/Kimi-K2-Instruct-0905',
+    name: 'Kimi K2 0905',
+    description: 'Kimi K2 0905. Kimi-k2 is a MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters.',
+    capabilities: ['general-knowledge'],
+    maxTokens: 2000,
+    default: false,
+  },
+];

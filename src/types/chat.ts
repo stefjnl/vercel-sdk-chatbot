@@ -34,3 +34,30 @@ export interface ChatResponse {
   reasoning?: string;
   done: boolean;
 }
+
+/**
+ * LLM Model configuration
+ */
+export interface ModelConfig {
+  id: string;
+  name: string;
+  description: string;
+  capabilities: string[];
+  maxTokens: number;
+  default: boolean;
+}
+
+/**
+ * LLM Models collection (from JSON file)
+ */
+export interface ModelsCollection {
+  models: ModelConfig[];
+}
+
+/**
+ * User's model preference (persisted)
+ */
+export interface ModelPreference {
+  selectedModelId: string;
+  lastUpdated: string;
+}

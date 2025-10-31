@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useChat } from 'ai/react';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import type { Message } from '@/types/chat';
+import {
+  getModelPreference,
+  saveModelPreference,
+} from '@/lib/storage/models';
 
 interface ChatInterfaceProps {
   conversationId?: string;
@@ -47,13 +51,29 @@ function mapFromAISDKMessages(messages: Array<{
 }
 
 /**
- * Main chat interface with Vercel AI SDK integration
+ * Main chat interface with Vercel AI SDK integration and model selection
  */
 export function ChatInterface({
   conversationId: _conversationId,
   initialMessages = [],
   onMessagesChange,
 }: ChatInterfaceProps) {
+  // Model state management
+  const [selectedModelId, setSelectedModelId] = useState<string>('');
+  const [modelLoaded, setModelLoaded] = useState(false);
+
+  // Load saved model preference on mount (client-side only)
+  useEffect(() => {
+    const savedModel = getModelPreference();
+    setSelectedModelId(savedModel);
+    setModelLoaded(true);
+  }, []);
+
+  // Handle model selection change
+  const handleModelChange = (modelId: string) => {
+    setSelectedModelId(modelId);
+    saveModelPreference(modelId);
+  };
   // Memoize mapped initial messages to prevent unnecessary re-renders
   const mappedInitialMessages = useMemo(
     () => mapToAISDKMessages(initialMessages),
@@ -70,6 +90,9 @@ export function ChatInterface({
   } = useChat({
     api: '/api/chat',
     initialMessages: mappedInitialMessages,
+    headers: selectedModelId
+      ? { 'x-model-id': selectedModelId }
+      : {},
     onFinish: () => {
       // Notify parent component of message updates after streaming completes
       if (onMessagesChange) {
@@ -95,14 +118,18 @@ export function ChatInterface({
         />
       </div>
 
-      {/* Input */}
-      <MessageInput
-        input={input}
-        isLoading={isLoading}
-        onInputChange={handleInputChange}
-        onSubmit={handleSubmit}
-        onStop={stop}
-      />
+      {/* Input with Model Selector */}
+      {modelLoaded && (
+        <MessageInput
+          input={input}
+          isLoading={isLoading}
+          selectedModelId={selectedModelId}
+          onInputChange={handleInputChange}
+          onSubmit={handleSubmit}
+          onModelChange={handleModelChange}
+          onStop={stop}
+        />
+      )}
     </div>
   );
 }
