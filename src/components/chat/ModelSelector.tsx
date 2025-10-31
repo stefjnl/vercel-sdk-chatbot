@@ -94,7 +94,7 @@ export function ModelSelector({
   // Validate selected model exists
   const selectedModel = selectedModelId
     ? findModelById(models, selectedModelId)
-    : models[0];
+    : (models.length > 0 ? models[0] : undefined);
 
   // Handle model selection with validation
   const handleModelSelect = useCallback(
