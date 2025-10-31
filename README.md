@@ -29,6 +29,8 @@ An AI chatbot application built with **Next.js 14**, **TypeScript**, **Vercel AI
 - 🛑 Stop generation during streaming
 
 ---
+![model-selection](https://github.com/user-attachments/assets/ed37a929-7f1d-45aa-a277-e1644f1de07f)
+---
 
 ## 🚀 Quick Start
 
