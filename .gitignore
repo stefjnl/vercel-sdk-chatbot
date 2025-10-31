@@ -39,3 +39,7 @@ next-env.d.ts
 *.swp
 *.swo
 *~
+
+# Copilot
+.github/
+.github/copilot-instructions.md

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Sidebar } from '@/components/sidebar/Sidebar';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -27,12 +28,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <div className="flex h-screen overflow-hidden">
-              <Sidebar />
-              <main className="flex-1 md:ml-72 overflow-hidden">
-                {children}
-              </main>
-            </div>
+            <ErrorBoundary>
+              <div className="flex h-screen overflow-hidden">
+                <Sidebar />
+                <main className="flex-1 md:ml-72 overflow-hidden">
+                  {children}
+                </main>
+              </div>
+            </ErrorBoundary>
           </TooltipProvider>
         </ThemeProvider>
       </body>
