@@ -90,9 +90,9 @@ export function ChatInterface({
   } = useChat({
     api: '/api/chat',
     initialMessages: mappedInitialMessages,
-    headers: {
-      'x-model-id': selectedModelId,
-    },
+    headers: selectedModelId
+      ? { 'x-model-id': selectedModelId }
+      : {},
     onFinish: () => {
       // Notify parent component of message updates after streaming completes
       if (onMessagesChange) {
