@@ -6,7 +6,7 @@ const nextConfig = {
     },
   },
   // Enable standalone output for Docker
-  output: 'standalone',
+  // output: 'standalone',
 };
 
 export default nextConfig;

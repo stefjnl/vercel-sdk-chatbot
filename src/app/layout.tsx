@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'AI Chatbot - Powered by NanoGPT',
-  description: 'A production-ready AI chatbot built with Next.js and Vercel AI SDK',
+  description: 'AI chatbot built with Next.js and Vercel AI SDK',
 };
 
 export default function RootLayout({
