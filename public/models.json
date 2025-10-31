@@ -27,7 +27,7 @@
     {
       "id": "moonshotai/Kimi-K2-Instruct-0905",
       "name": "Kimi K2 0905",
-      "description": "Kimi K2 0905. Kimi-k2 is a MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. In benchmark evaluations covering general knowledge reasoning, programming, mathematics, and agent-related tasks",
+      "description": "Kimi K2 0905. Kimi-k2 is a MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters. It excels in general knowledge reasoning, programming, mathematics, and agent-related tasks.",
       "capabilities": ["general-knowledge"],
       "maxTokens": 2000,
       "default": false
