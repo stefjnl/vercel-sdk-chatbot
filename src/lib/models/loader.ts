@@ -113,6 +113,9 @@ export function findModelById(
  * Gets the default model from a collection
  */
 export function getDefaultModel(models: ModelConfig[]): ModelConfig {
+  if (models.length === 0) {
+    throw new Error('getDefaultModel: models array is empty');
+  }
   const defaultModel = models.find((m) => m.default);
   return defaultModel || models[0];
 }
