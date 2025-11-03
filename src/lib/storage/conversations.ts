@@ -1,14 +1,14 @@
-import type { Conversation, ConversationStorage, Message } from '@/types/chat';
-import { generateId } from '@/lib/utils/helpers';
-import { generateTitle } from '@/lib/utils/markdown';
+import type { Conversation, ConversationStorage, Message } from "@/types/chat";
+import { generateId } from "@/lib/utils/helpers";
+import { generateTitle } from "@/lib/utils/markdown";
 
-const STORAGE_KEY = 'ai-chatbot-conversations';
+const STORAGE_KEY = "ai-chatbot-conversations";
 
 /**
  * Get all conversations from localStorage
  */
 export function getConversations(): Conversation[] {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === "undefined") return [];
 
   try {
     const data = localStorage.getItem(STORAGE_KEY);
@@ -17,7 +17,7 @@ export function getConversations(): Conversation[] {
     const parsed: ConversationStorage = JSON.parse(data);
     return parsed.conversations || [];
   } catch (error) {
-    console.error('Failed to load conversations:', error);
+    console.error("Failed to load conversations:", error);
     return [];
   }
 }
@@ -34,13 +34,13 @@ export function getConversation(id: string): Conversation | null {
  * Save conversations to localStorage
  */
 function saveConversations(conversations: Conversation[]): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   try {
     const data: ConversationStorage = { conversations };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
-    console.error('Failed to save conversations:', error);
+    console.error("Failed to save conversations:", error);
   }
 }
 
@@ -50,7 +50,7 @@ function saveConversations(conversations: Conversation[]): void {
 export function createConversation(firstMessage?: string): Conversation {
   const conversation: Conversation = {
     id: generateId(),
-    title: firstMessage ? generateTitle(firstMessage) : 'New Conversation',
+    title: firstMessage ? generateTitle(firstMessage) : "New Conversation",
     messages: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -68,7 +68,7 @@ export function createConversation(firstMessage?: string): Conversation {
  */
 export function updateConversation(
   id: string,
-  updates: Partial<Omit<Conversation, 'id' | 'createdAt'>>
+  updates: Partial<Omit<Conversation, "id" | "createdAt">>
 ): Conversation | null {
   const conversations = getConversations();
   const index = conversations.findIndex((c) => c.id === id);
@@ -90,7 +90,7 @@ export function updateConversation(
  */
 export function addMessage(
   conversationId: string,
-  message: Omit<Message, 'id' | 'createdAt'>
+  message: Omit<Message, "id" | "createdAt">
 ): Conversation | null {
   const conversations = getConversations();
   const conversation = conversations.find((c) => c.id === conversationId);
@@ -106,15 +106,6 @@ export function addMessage(
   conversation.messages.push(newMessage);
   conversation.updatedAt = new Date().toISOString();
 
-  // Update title if this is the first user message
-  if (
-    conversation.messages.length === 1 &&
-    message.role === 'user' &&
-    conversation.title === 'New Conversation'
-  ) {
-    conversation.title = generateTitle(message.content);
-  }
-
   saveConversations(conversations);
   return conversation;
 }
@@ -125,14 +116,16 @@ export function addMessage(
 export function updateMessage(
   conversationId: string,
   messageId: string,
-  updates: Partial<Omit<Message, 'id' | 'createdAt'>>
+  updates: Partial<Omit<Message, "id" | "createdAt">>
 ): Conversation | null {
   const conversations = getConversations();
   const conversation = conversations.find((c) => c.id === conversationId);
 
   if (!conversation) return null;
 
-  const messageIndex = conversation.messages.findIndex((m) => m.id === messageId);
+  const messageIndex = conversation.messages.findIndex(
+    (m) => m.id === messageId
+  );
   if (messageIndex === -1) return null;
 
   conversation.messages[messageIndex] = {
@@ -163,7 +156,10 @@ export function deleteConversation(id: string): boolean {
 /**
  * Rename a conversation
  */
-export function renameConversation(id: string, title: string): Conversation | null {
+export function renameConversation(
+  id: string,
+  title: string
+): Conversation | null {
   return updateConversation(id, { title });
 }
 
@@ -171,6 +167,6 @@ export function renameConversation(id: string, title: string): Conversation | nu
  * Clear all conversations
  */
 export function clearAllConversations(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   localStorage.removeItem(STORAGE_KEY);
 }

@@ -1,5 +1,6 @@
 import type { ModelPreference } from '@/types/chat';
 import { DEFAULT_MODEL } from '@/lib/api/nanogpt';
+import { FALLBACK_MODELS } from '@/lib/models/constants';
 
 const STORAGE_KEY = 'ai-chatbot-model-preference';
 
@@ -15,7 +16,13 @@ export function getModelPreference(): string {
     if (!data) return DEFAULT_MODEL;
 
     const preference: ModelPreference = JSON.parse(data);
-    return preference.selectedModelId || DEFAULT_MODEL;
+    const candidate = preference.selectedModelId;
+
+    const isSupported = FALLBACK_MODELS.some(
+      (model) => model.id === candidate
+    );
+
+    return isSupported && candidate ? candidate : DEFAULT_MODEL;
   } catch (error) {
     console.error('Failed to load model preference:', error);
     return DEFAULT_MODEL;

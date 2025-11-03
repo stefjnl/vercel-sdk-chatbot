@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { PlusCircle, Menu, X, Sparkles } from 'lucide-react';
-import { ConversationList } from './ConversationList';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { PlusCircle, Menu, X, Sparkles } from "lucide-react";
+import { ConversationList } from "./ConversationList";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   getConversations,
   createConversation,
   deleteConversation,
   renameConversation,
-} from '@/lib/storage/conversations';
-import type { Conversation } from '@/types/chat';
-import { cn } from '@/lib/utils/helpers';
+} from "@/lib/storage/conversations";
+import type { Conversation } from "@/types/chat";
+import { cn } from "@/lib/utils/helpers";
 
 /**
  * Sidebar with conversation management
@@ -25,9 +25,18 @@ export function Sidebar() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Load conversations on mount
+  // Load conversations on mount and create new conversation if it's first load
   useEffect(() => {
-    setConversations(getConversations());
+    const loadedConversations = getConversations();
+    setConversations(loadedConversations);
+
+    // Check if we're on the home page (not on a chat page)
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      // Always create a new conversation when starting the app
+      const newConversation = createConversation();
+      setConversations([newConversation, ...loadedConversations]);
+      router.push(`/chat/${newConversation.id}`);
+    }
   }, []);
 
   const handleNewChat = () => {
@@ -72,8 +81,8 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-40 h-full w-72 border-r bg-background/95 backdrop-blur-sm transition-transform md:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          "fixed left-0 top-0 z-40 h-full w-72 border-r bg-background/95 backdrop-blur-sm transition-transform md:translate-x-0",
+          isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex flex-col h-full">
@@ -83,7 +92,9 @@ export function Sidebar() {
               <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-lg">
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
-              <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">AI Chat</h1>
+              <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                AI Chat
+              </h1>
             </div>
             <ThemeToggle />
           </div>
@@ -113,7 +124,8 @@ export function Sidebar() {
           <Separator />
           <div className="p-4">
             <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1">
-              Powered by <span className="font-semibold text-foreground">NanoGPT</span>
+              Powered by{" "}
+              <span className="font-semibold text-foreground">NanoGPT</span>
             </p>
           </div>
         </div>

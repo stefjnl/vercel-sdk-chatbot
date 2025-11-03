@@ -9,6 +9,7 @@ import { createOpenAI } from '@ai-sdk/openai';
  * This provider supports reasoning tokens via delta.reasoning in the stream.
  */
 export const nanogpt = createOpenAI({
+  name: 'nanogpt',
   baseURL: 'https://nano-gpt.com/api/v1',
   apiKey: process.env.NANOGPT_API_KEY || '',
 });

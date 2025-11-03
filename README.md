@@ -11,6 +11,7 @@ An AI chatbot application built with **Next.js 14**, **TypeScript**, **Vercel AI
 ## ✨ Features
 
 ### Core Functionality
+
 - 🚀 **Real-time Streaming** - Powered by Vercel AI SDK `streamText()`
 - 💬 **Multi-Conversation Support** - Create, rename, and delete chat threads
 - 💾 **LocalStorage Persistence** - Conversations saved automatically
@@ -18,9 +19,11 @@ An AI chatbot application built with **Next.js 14**, **TypeScript**, **Vercel AI
 - 📝 **Markdown Rendering** - Full GFM support with syntax highlighting
 - 📋 **Copy Code Blocks** - One-click copy functionality
 - 🎨 **Dark/Light Theme** - System preference detection + manual toggle
+- 🌐 **Built-in Web Search** - Brave Search tool for fresh, real-world context
 - 📱 **Fully Responsive** - Mobile-first design with collapsible sidebar
 
 ### UI/UX
+
 - ⚡ Auto-scroll to latest message
 - 🎭 Empty states with example prompts
 - 💀 Loading states and skeleton loaders
@@ -29,8 +32,8 @@ An AI chatbot application built with **Next.js 14**, **TypeScript**, **Vercel AI
 - 🛑 Stop generation during streaming
 
 ---
-![model-selection](https://github.com/user-attachments/assets/ed37a929-7f1d-45aa-a277-e1644f1de07f)
----
+
+## ![model-selection](https://github.com/user-attachments/assets/ed37a929-7f1d-45aa-a277-e1644f1de07f)
 
 ## 🚀 Quick Start
 
@@ -50,7 +53,7 @@ npm install
 
 # Configure environment variables
 cp .env.example .env
-# Edit .env and add your NANOGPT_API_KEY
+# Edit .env and add your NANOGPT_API_KEY and BRAVE_SEARCH_API_KEY
 
 # Run development server
 npm run dev
@@ -72,7 +75,7 @@ docker build -t ai-chatbot .
 docker-compose up -d
 
 # Or run directly
-docker run -p 3000:3000 -e NANOGPT_API_KEY=your_key_here ai-chatbot
+docker run -p 3000:3000 -e NANOGPT_API_KEY=your_key_here -e BRAVE_SEARCH_API_KEY=your_brave_key_here ai-chatbot
 ```
 
 ### Environment Variables
@@ -81,6 +84,7 @@ Create a `.env` file in the root directory:
 
 ```env
 NANOGPT_API_KEY=your_nanogpt_api_key_here
+BRAVE_SEARCH_API_KEY=your_brave_search_api_key_here
 ```
 
 **Important:** Replace `your_nanogpt_api_key_here` with your actual API key from the NanoGPT dashboard.
@@ -139,46 +143,58 @@ vercel-sdk-chatbot/
 
 ## 🏗️ Architecture Overview
 
+### Brave Search Tooling
+
+- Registers a streaming tool callable by any model via Vercel AI SDK v5
+- Resides in `src/lib/tools/brave-search.ts` with a Zod-validated schema
+- Securely calls `https://api.search.brave.com/res/v1/web/search` with the `BRAVE_SEARCH_API_KEY`
+- Returns a trimmed set (3-5) of results containing title, URL, and description for grounding responses
+- Automatically surfaces tool progress and sourced links inside assistant messages
+
 ### Vercel AI SDK Integration
 
 **API Route (`src/app/api/chat/route.ts`):**
+
 ```typescript
-import { streamText } from 'ai';
-import { nanogpt } from '@/lib/api/nanogpt';
+import { streamText } from "ai";
+import { nanogpt } from "@/lib/api/nanogpt";
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-  
+
   const result = streamText({
-    model: nanogpt('openai/gpt-oss-120b'),
+    model: nanogpt("openai/gpt-oss-120b"),
     messages,
     temperature: 0.7,
     maxTokens: 2000,
   });
-  
+
   return result.toDataStreamResponse();
 }
 ```
 
 **Frontend (`src/components/chat/ChatInterface.tsx`):**
-```typescript
-import { useChat } from '@ai-sdk/react';
 
-const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-  api: '/api/chat',
-});
+```typescript
+import { useChat } from "@ai-sdk/react";
+
+const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat(
+  {
+    api: "/api/chat",
+  }
+);
 ```
 
 ### NanoGPT Provider
 
-Using `@ai-sdk/openai-compatible` for seamless integration:
+Using `@ai-sdk/openai` in chat mode for NanoGPT compatibility:
 
 ```typescript
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { createOpenAI } from "@ai-sdk/openai";
 
-export const nanogpt = createOpenAICompatible({
-  name: 'nanogpt',
-  baseURL: 'https://nano-gpt.com/api/v1/chat/completions',
+export const nanogpt = createOpenAI({
+  name: "nanogpt",
+  baseURL: "https://nano-gpt.com/api/v1",
   apiKey: process.env.NANOGPT_API_KEY,
 });
 ```
@@ -232,17 +248,21 @@ curl -X POST http://localhost:3000/api/chat \
 ### Common Issues
 
 **1. API Key Error**
+
 ```
 Error: NANOGPT_API_KEY is not configured
 ```
+
 **Solution:** Ensure `.env` file exists with valid API key.
 
 **2. Streaming Not Working**
+
 - Check browser console for errors
 - Verify API key is valid
 - Ensure NanoGPT API is accessible
 
 **3. Build Errors**
+
 ```bash
 # Clear cache and reinstall
 rm -rf .next node_modules package-lock.json
@@ -251,6 +271,7 @@ npm run build
 ```
 
 **4. Docker Issues**
+
 ```bash
 # Rebuild without cache
 docker-compose build --no-cache
@@ -265,9 +286,10 @@ Visit [http://localhost:3000/api/health](http://localhost:3000/api/health) to ve
 
 ## 📝 Environment Variables
 
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `NANOGPT_API_KEY` | NanoGPT API authentication key | ✅ Yes | - |
+| Variable               | Description                                    | Required | Default |
+| ---------------------- | ---------------------------------------------- | -------- | ------- |
+| `NANOGPT_API_KEY`      | NanoGPT API authentication key                 | ✅ Yes   | -       |
+| `BRAVE_SEARCH_API_KEY` | Brave Search API key for real-time web results | ✅ Yes   | -       |
 
 ---
 

@@ -4,9 +4,10 @@
 
 export interface Message {
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   content: string;
   reasoning?: string;
+  toolInvocations?: ToolInvocationResult[];
   createdAt: string;
 }
 
@@ -33,6 +34,21 @@ export interface ChatResponse {
   content: string;
   reasoning?: string;
   done: boolean;
+}
+
+export type ToolInvocationState =
+  | "partial-call"
+  | "call"
+  | "result"
+  | "unknown";
+
+export interface ToolInvocationResult {
+  id: string;
+  toolName: string;
+  state: ToolInvocationState;
+  args?: Record<string, unknown> | null;
+  result?: unknown;
+  isError?: boolean;
 }
 
 /**
